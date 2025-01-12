@@ -54,9 +54,15 @@ loadingManager.onLoad = function() {
     assetsLoaded = true;
     loadingScreen.style.display = 'none';
 };
+// Force remove loading screen after 1 second
+setTimeout(() => {
+    assetsLoaded = true;
+    loadingScreen.style.display = 'none';
+}, 1000);
 
 // Initialize the scene
 const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x111111); // Dark grey background
 
 // Clock for animation
 const clock = new THREE.Clock();
@@ -274,12 +280,21 @@ function createCastle() {
     }
     castleGroup.add(computerRoom);
     scene.add(castleGroup);
-
+    // Add point lights inside the castle
+    const pointLight1 = new THREE.PointLight(0xffffff, 2, 100);
+    pointLight1.position.set(0, 10, 0);
+    castleGroup.add(pointLight1);
+    const pointLight2 = new THREE.PointLight(0xffffff, 2, 100);
+    pointLight2.position.set(-30, 10, -30);
+    castleGroup.add(pointLight2);
+    const pointLight3 = new THREE.PointLight(0xffffff, 2, 100);
+    pointLight3.position.set(30, 10, 30);
+    castleGroup.add(pointLight3);
     return castleGroup;
 }
 
 // Setup improved lighting system
-const sunLight = new THREE.DirectionalLight(0x2b1a45, 0.5); // Dimmer, purple-tinted light
+const sunLight = new THREE.DirectionalLight(0x2b1a45, 2.0); // Increased intensity
 sunLight.position.set(-50, 200, -50);
 sunLight.castShadow = true;
 sunLight.shadow.mapSize.width = 2048;
@@ -294,10 +309,13 @@ sunLight.shadow.bias = -0.001;
 scene.add(sunLight);
 
 // Add hemisphere light to simulate sky and ground bounce light
-const hemiLight = new THREE.HemisphereLight(skyColor, groundColor, 0.2);
+const hemiLight = new THREE.HemisphereLight(skyColor, groundColor, 1.0); // Increased intensity
 scene.add(hemiLight);
-// Add fog to the scene
-scene.fog = new THREE.FogExp2(0x000000, 0.0025);
+// Add ambient light for better overall visibility
+const ambientLight = new THREE.AmbientLight(0x404040, 1.0);
+scene.add(ambientLight);
+// Reduce fog density for better visibility
+scene.fog = new THREE.FogExp2(0x000000, 0.001);
 
 // Create initial scene
 const castle = createCastle();
@@ -434,10 +452,10 @@ const styles = `
     border: none;
     border-radius: 12px; /* Rounded corners */
     opacity: 0.9; /* Higher opacity */
-    transition:
-        opacity 0.2s,
-        transform 0.1s,
-        box-shadow 0.2s,
+    transition: 
+        opacity 0.2s, 
+        transform 0.1s, 
+        box-shadow 0.2s, 
         filter 0.2s; /* Smooth transitions */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Initial shadow */
 }
@@ -474,10 +492,10 @@ const styles = `
     border: none;
     border-radius: 35px; /* Fully rounded */
     opacity: 0.9; /* Higher opacity */
-    transition:
-        opacity 0.2s,
-        transform 0.1s,
-        box-shadow 0.2s,
+    transition: 
+        opacity 0.2s, 
+        transform 0.1s, 
+        box-shadow 0.2s, 
         filter 0.2s; /* Smooth transitions */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Initial shadow */
     background-image: url('https://play.rosebud.ai/assets/Up-Arrow.png?EXsR'); /* Jump button icon */
