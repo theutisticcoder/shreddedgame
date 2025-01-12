@@ -69,12 +69,12 @@ const clock = new THREE.Clock();
 
 // Initialize the camera
 const camera = new THREE.PerspectiveCamera(
-    75,
+    60, // Reduced FOV for better perspective
     canvas.offsetWidth / canvas.offsetHeight,
     0.1,
     1000
 );
-camera.position.set(0, 15, 80);
+camera.position.set(120, 60, 120); // Position camera further back and up
 camera.lookAt(0, 0, 0);
 
 // Initialize the renderer with HDR
@@ -166,9 +166,12 @@ scene.add(sky);
 // Modify OrbitControls setup
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
-controls.dampingFactor = 0.25; // Adjusted damping factor
+controls.dampingFactor = 0.25;
 controls.screenSpacePanning = false;
 controls.maxPolarAngle = Math.PI / 2;
+controls.minDistance = 50;
+controls.maxDistance = 200;
+controls.target.set(0, 20, 0); // Look at the middle of the castle
 
 // Create flat terrain
 function createCastle() {
